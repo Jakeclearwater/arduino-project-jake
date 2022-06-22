@@ -2,6 +2,7 @@
 #include <RFID.h>
 #include <Servo.h>
 #include <LiquidCrystal.h>
+#include <Adafruit_SleepyDog.h>
 
 LiquidCrystal screen(8, 7, 6, 5, 4, 2);
 RFID scanner(10, 9);
@@ -26,10 +27,12 @@ void setup() {
   lockSystem.attach(3);
   lockSystem.write(lockedPos);
   startDisplay();
+  Watchdog.enable(10000); //resets after 10 seconds
 }
 
 void loop() {
   checkForCard();
+  
 }
 
 void checkForCard() { //used basic formula from example on how to read cards
@@ -72,6 +75,7 @@ void checkForAccess(String id) {
         lockSystem.write(lockedPos);
         locked = true;
       }
+
     }
     if (accepted == false)     //If ID is not in system
     {
@@ -79,6 +83,7 @@ void checkForAccess(String id) {
       screen.clear();
       screen.setCursor(0, 0);
       screen.print("Access Denied");
+      
     }
   }
 }
